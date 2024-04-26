@@ -1,6 +1,6 @@
 import java.io.*;
 import java.util.*;
-public class Main extends PCB {
+public class Driver extends PCB {
 
     static Scanner input = new Scanner(System.in);
 	static List<PCB> Q1 = new ArrayList<>();
