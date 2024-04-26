@@ -201,6 +201,7 @@ for (int i = 0; i < num; i++) {
     gantChart.sort(Comparator.comparing(PCB::getProcessID));
 
 
+
     // Print info for each process
     for (PCB process : gantChart) {
         sb.append(process.toString());
@@ -239,6 +240,51 @@ for (int i = 0; i < num; i++) {
 }
 
   
+public static void reportDetailedInformation() {
+  if (Q1.isEmpty() && Q2.isEmpty()) {
+      System.out.println("\nThere are no processes yet!");
+  } else {
+      // Sort Q1 & Q2 by arrival time to ensure they are in the appropriate order
+      Collections.sort(Q1, Comparator.comparingInt(process -> process.getArrivalTime()));
+      Collections.sort(Q2, Comparator.comparingInt(process -> process.getArrivalTime()));
+
+      PCB sjfProcess = null;
+      StringBuilder schedulingOrder = new StringBuilder();
+      schedulingOrder.append("\nScheduling Order: [ ");
+      PCB b = new PCB();
+
+      while (!Q1.isEmpty() || !Q2.isEmpty()) {
+          if (!Q1.isEmpty() && Q1.get(0).getArrivalTime() <= b.currentTime) {
+            RounRobin(schedulingOrder, b);
+          } else if (!Q2.isEmpty() && Q2.get(0).getArrivalTime() <= b.currentTime) {
+              sjfWithPreemptive(schedulingOrder, sjfProcess, b);
+          } else {
+              schedulingOrder.append("idle | ");
+              b.currentTime++;
+          }
+      }
+
+      // Remove the last '|' character if present
+      int lastIndex = schedulingOrder.length() - 2;
+      if (lastIndex >= 0 && schedulingOrder.charAt(lastIndex) == '|') {
+          schedulingOrder.deleteCharAt(lastIndex);
+      }
+      schedulingOrder.append("]\n");
+
+      // Print process info and write details to file
+      printProcessInfo(schedulingOrder);
+      writeDetailsToFile(schedulingOrder);
+  }
+}
+
+public static void writeDetailsToFile(StringBuilder sb) {
+  try (PrintWriter printWriter = new PrintWriter(new FileWriter("Report.txt"))) {
+      printWriter.println(sb);
+  } catch (IOException e) {
+      e.printStackTrace();
+      // Handle file writing exception here
+  }
+}
 
 
 
