@@ -124,7 +124,121 @@ for (int i = 0; i < num; i++) {
 
 
     }//end processinfo
+ public static void RounRobin(StringBuilder sb, PCB b) {
+      PCB currentProcess = Q1.remove(0);
+      sb.append(currentProcess.getProcessID()).append(" | ");
+  
+      if (currentProcess.getStartTime() == -1) {
+          currentProcess.setStartTime(b.currentTime);
+      }
+  
+      if (currentProcess.getCopyCPUpuBurst() > 3) {
+          b.currentTime += 3;
+          currentProcess.setCopyArrivalTime(b.currentTime);
+          currentProcess.setCopyCPUpuBurst(currentProcess.getCopyCPUpuBurst() - 3);
+          Q1.add(currentProcess);
+          Collections.sort(Q1, Comparator.comparingInt(process -> process.getCopyArrivalTime()));
+      } else {
+          b.currentTime += currentProcess.getCopyCPUpuBurst();
+          currentProcess.setTerminationTime(b.currentTime);
+          currentProcess.setTurnaroundTime(currentProcess.getTerminationTime() - currentProcess.getArrivalTime());
+          currentProcess.setWaitingTime(currentProcess.getTurnaroundTime() - currentProcess.getCpuBurst());
+          currentProcess.setResponseTime(currentProcess.getStartTime() - currentProcess.getArrivalTime());
+          gantChart.add(currentProcess);
+      }
+  }
+  public static void sjfWithPreemptive(StringBuilder stringBuilder, PCB process, PCB currentProcess) {
+    // If the current process is terminated, select the first process in Q2 Otherwise, select the process in Q2 with the shortest burst time that has arrived
+     process =  (currentProcess.terminated == true) ?  Q2.get(0) : Q2.stream()
+     .filter(p -> p.getArrivalTime() <= currentProcess.currentTime)
+     .min(Comparator.comparingInt(p -> p.getCopyCPUpuBurst()))
+     .orElse(null);
+     
+     
+    // If a process was selected
+    if (process != null) {
+     // Remove the selected process from Q2
+     Q2.remove(process);
+     // Add the process ID to the schedule
+     stringBuilder.append(process.getProcessID()).append(" | ");
+     
+     // If the process hasn't started yet, set its start time
+     if (process.getStartTime() == -1) 
+      process.setStartTime(currentProcess.currentTime);
+    
+     
+     // Calculate the response time of the process
+     process.setResponseTime(process.getStartTime() - process.getArrivalTime());
+     
+     // While there are no new arrivals and the process still has burst time
+     while ((Q1.isEmpty() || Q1.get(0).getArrivalTime() > currentProcess.currentTime) && process.getCopyCPUpuBurst() > 0) {
+      // Decrement the burst time of the process and increment the current time
+      process.setCopyCPUpuBurst(process.getCopyCPUpuBurst() - 1);
+      currentProcess.currentTime++;
+     }
+     
+     // If the process still has burst time
+     if (process.getCopyCPUpuBurst() > 0) {
+      // The current process is not terminated and the selected process is added back to Q2
+      currentProcess.terminated = false;
+      Q2.add(0, process);
+     } else {
+      // Otherwise, the current process is terminated
+      currentProcess.terminated = true;
+      // Set the termination time of the process
+      process.setTerminationTime(currentProcess.currentTime);
+      // Calculate the turnaround time and waiting time of the process
+      process.setTurnaroundTime(process.getTerminationTime() - process.getArrivalTime());
+      process.setWaitingTime(process.getTurnaroundTime() - process.getCpuBurst());
+      // Add the process to the gantt chart
+      gantChart.add(process);
+     }
+    }
+    // End of the sjfWithPreemptive method
+   }
+  public static StringBuilder printProcessInfo(StringBuilder sb) {
+    // Sort processes by process ID
+    gantChart.sort(Comparator.comparing(PCB::getProcessID));
 
+
+    // Print info for each process
+    for (PCB process : gantChart) {
+        sb.append(process.toString());
+    }
+
+    // Calculate average time
+    double averageTurnaroundTime = 0;
+    double averageWaitingTime = 0;
+    double averageResponseTime = 0;
+
+    if (!gantChart.isEmpty()) {
+        int sumTurnaround = 0;
+        int sumWaiting = 0;
+        int sumResponse = 0;
+
+        for (PCB process : gantChart) {
+            sumTurnaround += process.getTurnaroundTime();
+            sumWaiting += process.getWaitingTime();
+            sumResponse += process.getResponseTime();
+        }
+
+        // Calculate averages
+        averageTurnaroundTime = (double) sumTurnaround / gantChart.size();
+        averageWaitingTime = (double) sumWaiting / gantChart.size();
+        averageResponseTime = (double) sumResponse / gantChart.size();
+    }
+
+    // Append average info to StringBuilder
+    sb.append("Average[ Average Turnaround Time: ").append(averageTurnaroundTime)
+            .append(", Average Waiting Time: ").append(averageWaitingTime)
+            .append(", Average Response Time: ").append(averageResponseTime).append(" ]\n");
+
+    // Print output
+    System.out.println(sb.toString());
+    return sb;
+}
+
+  
 
 
 
