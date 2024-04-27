@@ -1,76 +1,40 @@
 
-Scheduling Order: [ P1 | P2 | P5 | P2 | P5 | P3 | P6 | P3 | P4 | P4  ]
+Scheduling Order: [ P1 | P3 | P3 | P2  ]
 | Field Name           | Value                |
 +--------------------+--------------------+
 | Process ID           | P1                   |
 | Priority             | 1                    |
 | Arrival Time         | 0                    |
-| CPU Burst            | 3                    |
+| CPU Burst            | 2                    |
 | Start Time           | 0                    |
-| Termination Time     | 3                    |
-| Turnaround Time      | 3                    |
+| Termination Time     | 2                    |
+| Turnaround Time      | 2                    |
 | Waiting Time         | 0                    |
 | Response Time        | 0                    |
 +--------------------+--------------------+
 | Field Name           | Value                |
 +--------------------+--------------------+
 | Process ID           | P2                   |
-| Priority             | 1                    |
-| Arrival Time         | 2                    |
-| CPU Burst            | 5                    |
-| Start Time           | 3                    |
-| Termination Time     | 11                   |
-| Turnaround Time      | 9                    |
-| Waiting Time         | 4                    |
-| Response Time        | 1                    |
+| Priority             | 2                    |
+| Arrival Time         | 1                    |
+| CPU Burst            | 3                    |
+| Start Time           | 6                    |
+| Termination Time     | 9                    |
+| Turnaround Time      | 8                    |
+| Waiting Time         | 5                    |
+| Response Time        | 5                    |
 +--------------------+--------------------+
 | Field Name           | Value                |
 +--------------------+--------------------+
 | Process ID           | P3                   |
-| Priority             | 2                    |
-| Arrival Time         | 5                    |
-| CPU Burst            | 5                    |
-| Start Time           | 14                   |
-| Termination Time     | 22                   |
-| Turnaround Time      | 17                   |
-| Waiting Time         | 12                   |
-| Response Time        | 9                    |
-+--------------------+--------------------+
-| Field Name           | Value                |
-+--------------------+--------------------+
-| Process ID           | P4                   |
-| Priority             | 2                    |
-| Arrival Time         | 3                    |
-| CPU Burst            | 6                    |
-| Start Time           | 22                   |
-| Termination Time     | 28                   |
-| Turnaround Time      | 25                   |
-| Waiting Time         | 19                   |
-| Response Time        | 19                   |
-+--------------------+--------------------+
-| Field Name           | Value                |
-+--------------------+--------------------+
-| Process ID           | P5                   |
 | Priority             | 1                    |
-| Arrival Time         | 5                    |
-| CPU Burst            | 6                    |
-| Start Time           | 6                    |
-| Termination Time     | 14                   |
-| Turnaround Time      | 9                    |
-| Waiting Time         | 3                    |
-| Response Time        | 1                    |
-+--------------------+--------------------+
-| Field Name           | Value                |
-+--------------------+--------------------+
-| Process ID           | P6                   |
-| Priority             | 1                    |
-| Arrival Time         | 17                   |
-| CPU Burst            | 3                    |
-| Start Time           | 17                   |
-| Termination Time     | 20                   |
-| Turnaround Time      | 3                    |
+| Arrival Time         | 2                    |
+| CPU Burst            | 4                    |
+| Start Time           | 2                    |
+| Termination Time     | 6                    |
+| Turnaround Time      | 4                    |
 | Waiting Time         | 0                    |
 | Response Time        | 0                    |
 +--------------------+--------------------+
-Average[ Average Turnaround Time: 11.0, Average Waiting Time: 6.333333333333333, Average Response Time: 5.0 ]
+Average[ Average Turnaround Time: 4.666666666666667, Average Waiting Time: 1.6666666666666667, Average Response Time: 1.6666666666666667 ]
 
