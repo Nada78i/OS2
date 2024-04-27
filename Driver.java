@@ -2,10 +2,10 @@ import java.io.*;
 import java.util.*;
 public class Driver extends PCB {
 
-    static Scanner input = new Scanner(System.in);
+  static Scanner input = new Scanner(System.in);
+  static List<PCB> processChart = new ArrayList<>();
 	static List<PCB> Q1 = new ArrayList<>();
 	static List<PCB> Q2 = new ArrayList<>();
-	static List<PCB> processChart = new ArrayList<>();
 	static int processID = 0;
 
     public static void main(String[] args) {
@@ -125,21 +125,21 @@ for (int i = 0; i < num; i++) {
 
     }//end processinfo
 
-    public static void RounRobin(StringBuilder sb, PCB b) {
+    public static void RounRobin(StringBuilder n, PCB y) {
       PCB currentProcess = Q1.remove(0);
-      sb.append(currentProcess.getProcessID() + " | ");
+      n.append(currentProcess.getProcessID() + " | ");
       if (currentProcess.getStartTime() == -1) {
-        currentProcess.setStartTime(b.currentTime);
+        currentProcess.setStartTime(y.currentTime);
       }
       if (currentProcess.getCopyCPUpuBurst() > 3) {
-        b.currentTime += 3;
-        currentProcess.setCopyArrivalTime(b.currentTime);
+        y.currentTime += 3;
+        currentProcess.setCopyArrivalTime(y.currentTime);
         currentProcess.setCopyCPUpuBurst(currentProcess.getCopyCPUpuBurst() - 3);
         Q1.add(currentProcess);
         Collections.sort(Q1, Comparator.comparingInt(process -> process.getCopyArrivalTime()));
       } else {
-        b.currentTime += currentProcess.getCopyCPUpuBurst();
-        currentProcess.setTerminationTime(b.currentTime);
+        y.currentTime += currentProcess.getCopyCPUpuBurst();
+        currentProcess.setTerminationTime(y.currentTime);
         currentProcess.setTurnaroundTime(currentProcess.getTerminationTime() - currentProcess.getArrivalTime());
         currentProcess.setWaitingTime(currentProcess.getTurnaroundTime() - currentProcess.getCpuBurst());
         currentProcess.setResponseTime(currentProcess.getStartTime() - currentProcess.getArrivalTime());
@@ -151,85 +151,82 @@ for (int i = 0; i < num; i++) {
 
 
 
-    public static void sjf(StringBuilder schedulingOrder, PCB sjfProcess, PCB b) {
+    public static void sjf(StringBuilder TheOrder, PCB ProcessSJF, PCB e) {
       // Find the process with the shortest remaining CPU burst time among waiting processes in Q2
-      sjfProcess = null;
+      ProcessSJF = null;
       for (PCB process : Q2) {
-        if (process.getArrivalTime() <= b.currentTime && 
-            (sjfProcess == null || process.getCopyCPUpuBurst() < sjfProcess.getCopyCPUpuBurst())) {
-          sjfProcess = process;
+        if (process.getArrivalTime() <= e.currentTime && 
+            (ProcessSJF == null || process.getCopyCPUpuBurst() <ProcessSJF.getCopyCPUpuBurst())) {
+              ProcessSJF = process;
         }
       }
     
       // If a shortest job is found, execute it using SJF logic
-      if (sjfProcess != null) {
-        schedulingOrder.append(sjfProcess.getProcessID() + " | ");
-        if (sjfProcess.getStartTime() == -1) {
-          sjfProcess.setStartTime(b.currentTime);
+      if (ProcessSJF != null) {
+        TheOrder.append(ProcessSJF.getProcessID() + " | ");
+        if (ProcessSJF.getStartTime() == -1) {
+          ProcessSJF.setStartTime(e.currentTime);
         }
         
         // Execute the process until completion or time slice ends
-        if (sjfProcess.getCopyCPUpuBurst() <= 3) {
-          b.currentTime += sjfProcess.getCopyCPUpuBurst();
-          sjfProcess.setCopyCPUpuBurst(0);
-          sjfProcess.setTerminationTime(b.currentTime);
-          sjfProcess.setTurnaroundTime(sjfProcess.getTerminationTime() - sjfProcess.getArrivalTime());
-          sjfProcess.setWaitingTime(sjfProcess.getTurnaroundTime() - sjfProcess.getCpuBurst());
-          sjfProcess.setResponseTime(sjfProcess.getStartTime() - sjfProcess.getArrivalTime());
-          processChart.add(sjfProcess);
-          Q2.remove(sjfProcess); // Remove completed process from Q2
+        if (ProcessSJF.getCopyCPUpuBurst() <= 3) {
+          e.currentTime += ProcessSJF.getCopyCPUpuBurst();
+          ProcessSJF.setCopyCPUpuBurst(0);
+          ProcessSJF.setTerminationTime(e.currentTime);
+          ProcessSJF.setTurnaroundTime(ProcessSJF.getTerminationTime() - ProcessSJF.getArrivalTime());
+          ProcessSJF.setWaitingTime(ProcessSJF.getTurnaroundTime() - ProcessSJF.getCpuBurst());
+          ProcessSJF.setResponseTime(ProcessSJF.getStartTime() - ProcessSJF.getArrivalTime());
+          processChart.add(ProcessSJF);
+          Q2.remove(ProcessSJF); // Remove completed process from Q2
         } else {
-          sjfProcess.setCopyCPUpuBurst(sjfProcess.getCopyCPUpuBurst() - 3);
-          b.currentTime += 3;
+          ProcessSJF.setCopyCPUpuBurst(ProcessSJF.getCopyCPUpuBurst() - 3);
+          e.currentTime += 3;
         }
       } else {
         // No process found for SJF, mark idle time
-        schedulingOrder.append("idle | ");
-        b.currentTime++;
+        TheOrder.append("idle | ");
+        e.currentTime++;
       }
     }
-  public static StringBuilder printProcessInfo(StringBuilder sb) {
-    // Sort processes by process ID
-    processChart.sort(Comparator.comparing(PCB::getProcessID));
-
-
-
-    // Print info for each process
-    for (PCB process : processChart) {
-        sb.append(process.toString());
+    public static StringBuilder printProcessInfo(StringBuilder Stringy) {
+      // Sort processes by process ID
+      processChart.sort(Comparator.comparing(PCB::getProcessID));
+    
+      // Print info for each process
+      for (PCB process : processChart) {
+        Stringy.append(process.toString());
+      }
+    
+      // Calculate average time if there are processes
+      if (!processChart.isEmpty()) {
+        double totalProcesses = processChart.size();
+        double sumTurnaround = processChart.stream()
+            .mapToDouble(PCB::getTurnaroundTime)
+            .sum();
+        double sumWaiting = processChart.stream()
+            .mapToDouble(PCB::getWaitingTime)
+            .sum();
+        double sumResponse = processChart.stream()
+            .mapToDouble(PCB::getResponseTime)
+            .sum();
+    
+        double averageTurnaroundTime =(double) sumTurnaround / totalProcesses;
+        double averageWaitingTime = (double)sumWaiting / totalProcesses;
+        double averageResponseTime = (double)sumResponse / totalProcesses;
+        Stringy.append("Average[ Average Turnaround Time: ")
+          .append(averageTurnaroundTime)
+          .append(", Average Waiting Time: ")
+          .append(averageWaitingTime)
+          .append(", Average Response Time: ")
+          .append(averageResponseTime)
+          .append(" ]\n");
+      } else {
+        // Handle empty list case (optional: set averages to 0 or default values)
+      }
+      System.out.println(Stringy.toString());
+      return Stringy;
     }
-
-    // Calculate average time
-    double averageTurnaroundTime = 0;
-    double averageWaitingTime = 0;
-    double averageResponseTime = 0;
-
-    if (!processChart.isEmpty()) {
-        int sumTurnaround = 0;
-        int sumWaiting = 0;
-        int sumResponse = 0;
-
-        for (PCB process : processChart) {
-            sumTurnaround += process.getTurnaroundTime();
-            sumWaiting += process.getWaitingTime();
-            sumResponse += process.getResponseTime();
-        }
-
-        // Calculate averages
-        averageTurnaroundTime = (double) sumTurnaround / processChart.size();
-        averageWaitingTime = (double) sumWaiting / processChart.size();
-        averageResponseTime = (double) sumResponse / processChart.size();
-    }
-
-    // Append average info to StringBuilder
-    sb.append("Average[ Average Turnaround Time: ").append(averageTurnaroundTime)
-            .append(", Average Waiting Time: ").append(averageWaitingTime)
-            .append(", Average Response Time: ").append(averageResponseTime).append(" ]\n");
-
-    // Print output
-    System.out.println(sb.toString());
-    return sb;
-}
+    
 
   
   public static void reportDetailedInformation() {
@@ -269,9 +266,9 @@ for (int i = 0; i < num; i++) {
   }
 }  
 
-public static void writeDetailsToFile(StringBuilder sb) {
+public static void writeDetailsToFile(StringBuilder Detailes) {
   try (PrintWriter printWriter = new PrintWriter(new FileWriter("Report.txt"))) {
-      printWriter.println(sb);
+      printWriter.println(Detailes);
   } catch (IOException e) {
       e.printStackTrace();
       // Handle file writing exception here
