@@ -151,55 +151,43 @@ for (int i = 0; i < num; i++) {
 
 
 
-  public static void sjfWithPreemptive(StringBuilder stringBuilder, PCB process, PCB currentProcess) {
-    // If the current process is terminated, select the first process in Q2 Otherwise, select the process in Q2 with the shortest burst time that has arrived
-     process =  (currentProcess.terminated == true) ?  Q2.get(0) : Q2.stream()
-     .filter(p -> p.getArrivalTime() <= currentProcess.currentTime)
-     .min(Comparator.comparingInt(p -> p.getCopyCPUpuBurst()))
-     .orElse(null);
-     
-     
-    // If a process was selected
-    if (process != null) {
-     // Remove the selected process from Q2
-     Q2.remove(process);
-     // Add the process ID to the schedule
-     stringBuilder.append(process.getProcessID()).append(" | ");
-     
-     // If the process hasn't started yet, set its start time
-     if (process.getStartTime() == -1) 
-      process.setStartTime(currentProcess.currentTime);
+    public static void sjf(StringBuilder schedulingOrder, PCB sjfProcess, PCB b) {
+      // Find the process with the shortest remaining CPU burst time among waiting processes in Q2
+      sjfProcess = null;
+      for (PCB process : Q2) {
+        if (process.getArrivalTime() <= b.currentTime && 
+            (sjfProcess == null || process.getCopyCPUpuBurst() < sjfProcess.getCopyCPUpuBurst())) {
+          sjfProcess = process;
+        }
+      }
     
-     
-     // Calculate the response time of the process
-     process.setResponseTime(process.getStartTime() - process.getArrivalTime());
-     
-     // While there are no new arrivals and the process still has burst time
-     while ((Q1.isEmpty() || Q1.get(0).getArrivalTime() > currentProcess.currentTime) && process.getCopyCPUpuBurst() > 0) {
-      // Decrement the burst time of the process and increment the current time
-      process.setCopyCPUpuBurst(process.getCopyCPUpuBurst() - 1);
-      currentProcess.currentTime++;
-     }
-     
-     // If the process still has burst time
-     if (process.getCopyCPUpuBurst() > 0) {
-      // The current process is not terminated and the selected process is added back to Q2
-      currentProcess.terminated = false;
-      Q2.add(0, process);
-     } else {
-      // Otherwise, the current process is terminated
-      currentProcess.terminated = true;
-      // Set the termination time of the process
-      process.setTerminationTime(currentProcess.currentTime);
-      // Calculate the turnaround time and waiting time of the process
-      process.setTurnaroundTime(process.getTerminationTime() - process.getArrivalTime());
-      process.setWaitingTime(process.getTurnaroundTime() - process.getCpuBurst());
-      // Add the process to the gantt chart
-      gantChart.add(process);
-     }
+      // If a shortest job is found, execute it using SJF logic
+      if (sjfProcess != null) {
+        schedulingOrder.append(sjfProcess.getProcessID() + " | ");
+        if (sjfProcess.getStartTime() == -1) {
+          sjfProcess.setStartTime(b.currentTime);
+        }
+        
+        // Execute the process until completion or time slice ends
+        if (sjfProcess.getCopyCPUpuBurst() <= 3) {
+          b.currentTime += sjfProcess.getCopyCPUpuBurst();
+          sjfProcess.setCopyCPUpuBurst(0);
+          sjfProcess.setTerminationTime(b.currentTime);
+          sjfProcess.setTurnaroundTime(sjfProcess.getTerminationTime() - sjfProcess.getArrivalTime());
+          sjfProcess.setWaitingTime(sjfProcess.getTurnaroundTime() - sjfProcess.getCpuBurst());
+          sjfProcess.setResponseTime(sjfProcess.getStartTime() - sjfProcess.getArrivalTime());
+          gantChart.add(sjfProcess);
+          Q2.remove(sjfProcess); // Remove completed process from Q2
+        } else {
+          sjfProcess.setCopyCPUpuBurst(sjfProcess.getCopyCPUpuBurst() - 3);
+          b.currentTime += 3;
+        }
+      } else {
+        // No process found for SJF, mark idle time
+        schedulingOrder.append("idle | ");
+        b.currentTime++;
+      }
     }
-    // End of the sjfWithPreemptive method
-   }
   public static StringBuilder printProcessInfo(StringBuilder sb) {
     // Sort processes by process ID
     gantChart.sort(Comparator.comparing(PCB::getProcessID));
@@ -244,7 +232,7 @@ for (int i = 0; i < num; i++) {
 }
 
   
-public static void reportDetailedInformation() {
+  public static void reportDetailedInformation() {
   if (Q1.isEmpty() && Q2.isEmpty()) {
       System.out.println("\nThere are no processes yet!");
   } else {
@@ -261,7 +249,7 @@ public static void reportDetailedInformation() {
           if (!Q1.isEmpty() && Q1.get(0).getArrivalTime() <= b.currentTime) {
             RounRobin(schedulingOrder, b);
           } else if (!Q2.isEmpty() && Q2.get(0).getArrivalTime() <= b.currentTime) {
-              sjfWithPreemptive(schedulingOrder, sjfProcess, b);
+              sjf(schedulingOrder, sjfProcess, b);
           } else {
               schedulingOrder.append("idle | ");
               b.currentTime++;
@@ -279,7 +267,7 @@ public static void reportDetailedInformation() {
       printProcessInfo(schedulingOrder);
       writeDetailsToFile(schedulingOrder);
   }
-}
+}  
 
 public static void writeDetailsToFile(StringBuilder sb) {
   try (PrintWriter printWriter = new PrintWriter(new FileWriter("Report.txt"))) {
