@@ -32,7 +32,7 @@ public class Driver extends PCB {
             // Perform actions based on choice
             switch (choice) {
                 case 1:
-                processInfo();
+                infoOfProcess();
                     break;
                 case 2:
                 reportDetailedInformation();
@@ -48,7 +48,7 @@ public class Driver extends PCB {
         input.close();
     }
 
-    public static void processInfo() {
+    public static void infoOfProcess() {
 
         int num=0;
 
@@ -282,7 +282,7 @@ public static void reportDetailedInformation() {
 }
 
 public static void writeDetailsToFile(StringBuilder sb) {
-  try (PrintWriter printWriter = new PrintWriter(new FileWriter("Report1.txt"))) {
+  try (PrintWriter printWriter = new PrintWriter(new FileWriter("Report.txt"))) {
       printWriter.println(sb);
   } catch (IOException e) {
       e.printStackTrace();
