@@ -1,5 +1,5 @@
 
-Scheduling Order: [ P1 | P3 | P3 | P2  ]
+Scheduling Order: [ P1 | P2 | P3 | P3  ]
 | Field Name           | Value                |
 +--------------------+--------------------+
 | Process ID           | P1                   |
@@ -15,26 +15,26 @@ Scheduling Order: [ P1 | P3 | P3 | P2  ]
 | Field Name           | Value                |
 +--------------------+--------------------+
 | Process ID           | P2                   |
-| Priority             | 2                    |
+| Priority             | 1                    |
 | Arrival Time         | 1                    |
 | CPU Burst            | 3                    |
-| Start Time           | 6                    |
-| Termination Time     | 9                    |
-| Turnaround Time      | 8                    |
-| Waiting Time         | 5                    |
-| Response Time        | 5                    |
+| Start Time           | 2                    |
+| Termination Time     | 5                    |
+| Turnaround Time      | 4                    |
+| Waiting Time         | 1                    |
+| Response Time        | 1                    |
 +--------------------+--------------------+
 | Field Name           | Value                |
 +--------------------+--------------------+
 | Process ID           | P3                   |
 | Priority             | 1                    |
-| Arrival Time         | 2                    |
+| Arrival Time         | 4                    |
 | CPU Burst            | 4                    |
-| Start Time           | 2                    |
-| Termination Time     | 6                    |
-| Turnaround Time      | 4                    |
-| Waiting Time         | 0                    |
-| Response Time        | 0                    |
+| Start Time           | 5                    |
+| Termination Time     | 9                    |
+| Turnaround Time      | 5                    |
+| Waiting Time         | 1                    |
+| Response Time        | 1                    |
 +--------------------+--------------------+
-Average[ Average Turnaround Time: 4.666666666666667, Average Waiting Time: 1.6666666666666667, Average Response Time: 1.6666666666666667 ]
+Average[ Average Turnaround Time: 3.6666666666666665, Average Waiting Time: 0.6666666666666666, Average Response Time: 0.6666666666666666 ]
 
