@@ -35,7 +35,7 @@ public class Driver extends PCB {
                 processInfo();
                     break;
                 case 2:
-                //ReportDetailedInform();
+                reportDetailedInformation();
                     break;
                 case 3:
                     System.out.println("Goodbye.");
@@ -124,29 +124,33 @@ for (int i = 0; i < num; i++) {
 
 
     }//end processinfo
- public static void RounRobin(StringBuilder sb, PCB b) {
+
+    public static void RounRobin(StringBuilder sb, PCB b) {
       PCB currentProcess = Q1.remove(0);
-      sb.append(currentProcess.getProcessID()).append(" | ");
-  
+      sb.append(currentProcess.getProcessID() + " | ");
       if (currentProcess.getStartTime() == -1) {
-          currentProcess.setStartTime(b.currentTime);
+        currentProcess.setStartTime(b.currentTime);
       }
-  
       if (currentProcess.getCopyCPUpuBurst() > 3) {
-          b.currentTime += 3;
-          currentProcess.setCopyArrivalTime(b.currentTime);
-          currentProcess.setCopyCPUpuBurst(currentProcess.getCopyCPUpuBurst() - 3);
-          Q1.add(currentProcess);
-          Collections.sort(Q1, Comparator.comparingInt(process -> process.getCopyArrivalTime()));
+        b.currentTime += 3;
+        currentProcess.setCopyArrivalTime(b.currentTime);
+        currentProcess.setCopyCPUpuBurst(currentProcess.getCopyCPUpuBurst() - 3);
+        Q1.add(currentProcess);
+        Collections.sort(Q1, Comparator.comparingInt(process -> process.getCopyArrivalTime()));
       } else {
-          b.currentTime += currentProcess.getCopyCPUpuBurst();
-          currentProcess.setTerminationTime(b.currentTime);
-          currentProcess.setTurnaroundTime(currentProcess.getTerminationTime() - currentProcess.getArrivalTime());
-          currentProcess.setWaitingTime(currentProcess.getTurnaroundTime() - currentProcess.getCpuBurst());
-          currentProcess.setResponseTime(currentProcess.getStartTime() - currentProcess.getArrivalTime());
-          gantChart.add(currentProcess);
+        b.currentTime += currentProcess.getCopyCPUpuBurst();
+        currentProcess.setTerminationTime(b.currentTime);
+        currentProcess.setTurnaroundTime(currentProcess.getTerminationTime() - currentProcess.getArrivalTime());
+        currentProcess.setWaitingTime(currentProcess.getTurnaroundTime() - currentProcess.getCpuBurst());
+        currentProcess.setResponseTime(currentProcess.getStartTime() - currentProcess.getArrivalTime());
+        gantChart.add(currentProcess);
       }
-  }
+    }
+
+
+
+
+
   public static void sjfWithPreemptive(StringBuilder stringBuilder, PCB process, PCB currentProcess) {
     // If the current process is terminated, select the first process in Q2 Otherwise, select the process in Q2 with the shortest burst time that has arrived
      process =  (currentProcess.terminated == true) ?  Q2.get(0) : Q2.stream()
@@ -278,7 +282,7 @@ public static void reportDetailedInformation() {
 }
 
 public static void writeDetailsToFile(StringBuilder sb) {
-  try (PrintWriter printWriter = new PrintWriter(new FileWriter("Report.txt"))) {
+  try (PrintWriter printWriter = new PrintWriter(new FileWriter("Report1.txt"))) {
       printWriter.println(sb);
   } catch (IOException e) {
       e.printStackTrace();

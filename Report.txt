@@ -1,0 +1,24 @@
+
+Scheduling Order: [ P1 | P2  ]
+Process ID:P1
+Priority:1
+Arrival time:0
+CPU burst:2
+Start time:0 
+Termination time:2
+TurnAround time:2 
+Waiting time:0
+Response time:0
+
+Process ID:P2
+Priority:2
+Arrival time:1
+CPU burst:4
+Start time:2 
+Termination time:6
+TurnAround time:5 
+Waiting time:1
+Response time:1
+
+Average[ Average Turnaround Time: 3.5, Average Waiting Time: 0.5, Average Response Time: 0.5 ]
+
