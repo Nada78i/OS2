@@ -5,7 +5,7 @@ public class Driver extends PCB {
     static Scanner input = new Scanner(System.in);
 	static List<PCB> Q1 = new ArrayList<>();
 	static List<PCB> Q2 = new ArrayList<>();
-	static List<PCB> gantChart = new ArrayList<>();
+	static List<PCB> processChart = new ArrayList<>();
 	static int processID = 0;
 
     public static void main(String[] args) {
@@ -24,7 +24,7 @@ public class Driver extends PCB {
             try {
                 choice = input.nextInt();
             } catch (InputMismatchException e) {
-                System.out.println("Invalid input! Please enter a number (1-3).");
+                System.out.println(" Please enter a  valid number .");
                 input.next(); // Clear the invalid input
                 choice = 0; // Reset choice to avoid infinite loop
             }
@@ -143,7 +143,7 @@ for (int i = 0; i < num; i++) {
         currentProcess.setTurnaroundTime(currentProcess.getTerminationTime() - currentProcess.getArrivalTime());
         currentProcess.setWaitingTime(currentProcess.getTurnaroundTime() - currentProcess.getCpuBurst());
         currentProcess.setResponseTime(currentProcess.getStartTime() - currentProcess.getArrivalTime());
-        gantChart.add(currentProcess);
+        processChart.add(currentProcess);
       }
     }
 
@@ -176,7 +176,7 @@ for (int i = 0; i < num; i++) {
           sjfProcess.setTurnaroundTime(sjfProcess.getTerminationTime() - sjfProcess.getArrivalTime());
           sjfProcess.setWaitingTime(sjfProcess.getTurnaroundTime() - sjfProcess.getCpuBurst());
           sjfProcess.setResponseTime(sjfProcess.getStartTime() - sjfProcess.getArrivalTime());
-          gantChart.add(sjfProcess);
+          processChart.add(sjfProcess);
           Q2.remove(sjfProcess); // Remove completed process from Q2
         } else {
           sjfProcess.setCopyCPUpuBurst(sjfProcess.getCopyCPUpuBurst() - 3);
@@ -190,12 +190,12 @@ for (int i = 0; i < num; i++) {
     }
   public static StringBuilder printProcessInfo(StringBuilder sb) {
     // Sort processes by process ID
-    gantChart.sort(Comparator.comparing(PCB::getProcessID));
+    processChart.sort(Comparator.comparing(PCB::getProcessID));
 
 
 
     // Print info for each process
-    for (PCB process : gantChart) {
+    for (PCB process : processChart) {
         sb.append(process.toString());
     }
 
@@ -204,21 +204,21 @@ for (int i = 0; i < num; i++) {
     double averageWaitingTime = 0;
     double averageResponseTime = 0;
 
-    if (!gantChart.isEmpty()) {
+    if (!processChart.isEmpty()) {
         int sumTurnaround = 0;
         int sumWaiting = 0;
         int sumResponse = 0;
 
-        for (PCB process : gantChart) {
+        for (PCB process : processChart) {
             sumTurnaround += process.getTurnaroundTime();
             sumWaiting += process.getWaitingTime();
             sumResponse += process.getResponseTime();
         }
 
         // Calculate averages
-        averageTurnaroundTime = (double) sumTurnaround / gantChart.size();
-        averageWaitingTime = (double) sumWaiting / gantChart.size();
-        averageResponseTime = (double) sumResponse / gantChart.size();
+        averageTurnaroundTime = (double) sumTurnaround / processChart.size();
+        averageWaitingTime = (double) sumWaiting / processChart.size();
+        averageResponseTime = (double) sumResponse / processChart.size();
     }
 
     // Append average info to StringBuilder

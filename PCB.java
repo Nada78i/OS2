@@ -134,11 +134,28 @@ public class PCB {
 		this.terminated = terminated;
 	}
 
+	
+
 	@Override
 	public String toString() {
-		return "Process ID:" + processID + "\nPriority:" + priority + "\nArrival time:" + arrivalTime + "\nCPU burst:"
-				+ CpuBurst + "\nStart time:" + startTime + " \nTermination time:" + terminationTime
-				+ "\nTurnAround time:" + turnaroundTime + " \nWaiting time:" + waitingTime + "\nResponse time:"
-				+ responseTime + "\n\n";
+	  String lineSeparator = System.lineSeparator(); // Use system line separator for platform independence
+	  String format = "| %-20s | %-20s |%n"; // Format string for table rows
+	
+	  String table = String.format(format, "Field Name", "Value");
+	  table += "+" + "--------------------+".repeat(2) + lineSeparator;
+	
+	  table += String.format(format, "Process ID", processID);
+	  table += String.format(format, "Priority", priority);
+	  table += String.format(format, "Arrival Time", arrivalTime);
+	  table += String.format(format, "CPU Burst", CpuBurst);
+	  table += String.format(format, "Start Time", startTime == -1 ? "-" : startTime);
+	  table += String.format(format, "Termination Time", terminationTime == -1 ? "-" : terminationTime);
+	  table += String.format(format, "Turnaround Time", turnaroundTime);
+	  table += String.format(format, "Waiting Time", waitingTime);
+	  table += String.format(format, "Response Time", responseTime);
+	  table += "+" + "--------------------+".repeat(2) + lineSeparator;
+	
+	  return table;
 	}
+	
 }
