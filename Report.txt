@@ -1,40 +1,40 @@
 
-Scheduling Order: [ P1 | P2 | P3 | P3  ]
+Scheduling Order: [ P1 | P2 | P3 | P1  ]
 | Field Name           | Value                |
 +--------------------+--------------------+
 | Process ID           | P1                   |
-| Priority             | 1                    |
+| Priority             | 2                    |
 | Arrival Time         | 0                    |
-| CPU Burst            | 2                    |
+| CPU Burst            | 5                    |
 | Start Time           | 0                    |
-| Termination Time     | 2                    |
-| Turnaround Time      | 2                    |
-| Waiting Time         | 0                    |
+| Termination Time     | 10                   |
+| Turnaround Time      | 10                   |
+| Waiting Time         | 5                    |
 | Response Time        | 0                    |
 +--------------------+--------------------+
 | Field Name           | Value                |
 +--------------------+--------------------+
 | Process ID           | P2                   |
 | Priority             | 1                    |
-| Arrival Time         | 1                    |
-| CPU Burst            | 3                    |
-| Start Time           | 2                    |
+| Arrival Time         | 3                    |
+| CPU Burst            | 2                    |
+| Start Time           | 3                    |
 | Termination Time     | 5                    |
-| Turnaround Time      | 4                    |
-| Waiting Time         | 1                    |
-| Response Time        | 1                    |
+| Turnaround Time      | 2                    |
+| Waiting Time         | 0                    |
+| Response Time        | 0                    |
 +--------------------+--------------------+
 | Field Name           | Value                |
 +--------------------+--------------------+
 | Process ID           | P3                   |
 | Priority             | 1                    |
 | Arrival Time         | 4                    |
-| CPU Burst            | 4                    |
+| CPU Burst            | 3                    |
 | Start Time           | 5                    |
-| Termination Time     | 9                    |
-| Turnaround Time      | 5                    |
+| Termination Time     | 8                    |
+| Turnaround Time      | 4                    |
 | Waiting Time         | 1                    |
 | Response Time        | 1                    |
 +--------------------+--------------------+
-Average[ Average Turnaround Time: 3.6666666666666665, Average Waiting Time: 0.6666666666666666, Average Response Time: 0.6666666666666666 ]
+Average[ Average Turnaround Time: 5.333333333333333, Average Waiting Time: 2.0, Average Response Time: 0.3333333333333333 ]
 
